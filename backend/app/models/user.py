@@ -1,0 +1,22 @@
+# backend/app/models/user.py
+from datetime import datetime
+
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
+
+from app.db import Base
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    full_name = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # ✅ 新增：角色字段
+    role = Column(String, nullable=False, default="user")
+
+    # ✅ 有効/無効（ユーザー停止用）
+    is_active = Column(Boolean, nullable=False, default=True)

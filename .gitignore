@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+backend/venv/
+
+# Node
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+
+# SQLite データベース（本番はコンテナ内で生成）
+*.db
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/

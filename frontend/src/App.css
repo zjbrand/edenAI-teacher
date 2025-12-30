@@ -1,0 +1,980 @@
+:root {
+  --bg-dark: #020617;
+  --bg-dark-soft: #0f172a;
+  --bg-light: #f3f4f6;
+  --bg-light-soft: #e5e7eb;
+  --primary: #22c55e;
+  --primary-soft: rgba(34, 197, 94, 0.12);
+  --accent: #38bdf8;
+  --border-dark: #1f2937;
+  --border-light: #d1d5db;
+  --text-light: #e5e7eb;
+  --text-dark: #111827;
+}
+
+/* 让页面从最左到最右撑满 */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* 根容器：根据主题切换背景和文字色 */
+.app-root {
+  min-height: 100vh;
+  width: 100%;              /* 不用 100vw，避免水平滚动条 */
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.app-root.dark {
+  background: radial-gradient(circle at top, #1e293b, #020617 60%);
+  color: var(--text-light);
+}
+
+.app-root.light {
+  background: radial-gradient(circle at top, #dbeafe, #f9fafb 60%);
+  color: var(--text-dark);
+}
+
+/* 整体布局：侧边栏 + 主内容 */
+.app-layout {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  margin: 0;                /* 重要：不要再有 margin: 0 auto 之类 */
+  display: flex;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+
+/* 主题下 panel 背景 */
+.app-root.dark .app-layout {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-dark);
+}
+
+.app-root.light .app-layout {
+  background: white;
+  border: 1px solid var(--border-light);
+}
+
+/* 侧边栏 */
+.sidebar {
+  width: 240px;
+  position: relative;
+  height: 100vh;     /* 占满整屏 */
+  flex-shrink: 0;  /* 防止被主区域挤压变矮 */
+}
+
+.sidebar-inner {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 47, 73, 0.9),
+    rgba(15, 23, 42, 0.98)
+  );
+}
+
+.app-root.light .sidebar-inner {
+  background: linear-gradient(
+    180deg,
+    rgba(191, 219, 254, 0.9),
+    rgba(221, 239, 253, 0.98)
+  );
+}
+
+/* 侧边栏头部 */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.sidebar-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(15, 23, 42, 0.6);
+  object-fit: contain;
+  background: #0b1120;
+}
+
+.sidebar-title-main {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sidebar-title-sub {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* 侧边栏导航 */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: auto;
+}
+
+.nav-item {
+  text-align: left;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 14px;
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.app-root.light .nav-item {
+  color: var(--text-dark);
+}
+
+.nav-item:hover {
+  background: rgba(15, 23, 42, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.4);
+}
+
+.app-root.light .nav-item:hover {
+  background: rgba(191, 219, 254, 0.8);
+}
+
+.nav-item.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.45);
+}
+
+/* 侧边栏底部按钮 */
+.sidebar-footer {
+  position: absolute;
+
+  /* 这里控制“抬高”多少：你现在的屏幕看起来再往上 1 行左右就很接近输入框 */
+  bottom: 70px;   /* 可以试着在 90 ~ 130 之间微调，选你看着最顺眼的值 */
+
+  left: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.outline-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: transparent;
+  font-size: 12px;
+  padding: 6px 10px;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.app-root.light .outline-btn {
+  color: var(--text-dark);
+}
+
+.outline-btn:hover {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: var(--primary);
+}
+
+.app-root.light .outline-btn:hover {
+  background: rgba(191, 219, 254, 0.9);
+}
+
+.outline-btn.danger {
+  border-color: #f97373;
+  color: #fecaca;
+}
+
+.app-root.light .outline-btn.danger {
+  color: #b91c1c;
+}
+
+.outline-btn.danger:hover {
+  background: rgba(127, 29, 29, 0.8);
+}
+
+/* 主内容区域 */
+.main-panel {
+  flex: 1 1 auto;
+  min-width: 0;             /* 防止内部内容撑破，导致右侧再出现空白 */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--bg-dark-soft);
+}
+
+.app-root.light .main-panel {
+  background: var(--bg-light);       /* 亮色主题下右侧背景 */
+}
+
+/* 移动端顶部工具栏（桌面端隐藏） */
+.mobile-top-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.menu-btn {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.mobile-top-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 聊天视图 */
+.chat-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 版权文字样式 */
+  .copyright {
+    margin-top: 4px;
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+/* 聊天顶部栏 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-dark);
+  background: linear-gradient(
+    90deg,
+    rgba(56, 189, 248, 0.12),
+    rgba(129, 140, 248, 0.12)
+  );
+}
+
+.app-root.light .top-bar {
+  border-bottom-color: var(--border-light);
+  background: linear-gradient(
+    90deg,
+    rgba(191, 219, 254, 0.6),
+    rgba(221, 214, 254, 0.6)
+  );
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-title-main {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.app-title-sub {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subject-select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.subject-select select {
+  border-radius: 999px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: var(--text-light);
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.app-root.light .subject-select select {
+  background: white;
+  color: var(--text-dark);
+  border-color: var(--border-light);
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--text-light);
+  font-size: 12px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.app-root.light .theme-toggle {
+  background: white;
+  color: var(--text-dark);
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.theme-toggle.big {
+  padding: 6px 14px;
+}
+
+/* 聊天主体区域 */
+.chat-body {
+  flex: 1;
+  padding: 12px 16px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.chat-empty-hint {
+  opacity: 0.7;
+  text-align: center;
+  margin-top: 40px;
+  font-size: 13px;
+}
+
+/* 消息气泡行 */
+.chat-message-row {
+  margin-bottom: 12px;
+  display: flex;
+  animation: fadeInUp 0.2s ease-out;
+}
+
+.chat-message-row.align-right {
+  justifyContent: flex-end;
+}
+
+.chat-message-row.align-left {
+  justify-content: flex-start;
+}
+
+/* 气泡 */
+.chat-message-bubble {
+  max-width: 72%;
+  padding: 8px 10px;
+  border-radius: 12px;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.user-bubble {
+  background: #2563eb;
+  color: #e5e7eb;
+  border-bottom-right-radius: 2px;
+}
+
+.assistant-bubble {
+  background: #111827;
+  color: #e5e7eb;
+  border-bottom-left-radius: 2px;
+}
+
+.app-root.light .assistant-bubble {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+/* 错误条 */
+.error-bar {
+  padding: 6px 12px;
+  font-size: 12px;
+  background: #7f1d1d;
+  color: #fecaca;
+}
+
+/* 输入栏 */
+.input-bar {
+  border-top: 1px solid var(--border-dark);
+  padding: 8px 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.app-root.light .input-bar {
+  border-top-color: var(--border-light);
+}
+
+.input-bar textarea {
+  flex: 1;
+  resize: none;
+  background: #020617;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+  font-size: 14px;
+  padding: 6px 8px;
+  height: 60px;
+}
+
+.app-root.light .input-bar textarea {
+  background: white;
+  color: #111827;
+  border-color: var(--border-light);
+}
+
+.input-bar button {
+  width: 90px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--primary);
+  color: #020617;
+  opacity: 1;
+  transition: transform 0.1s, box-shadow 0.1s, opacity 0.2s;
+}
+
+.input-bar button:disabled {
+  background: #4b5563;
+  opacity: 0.7;
+  cursor: default;
+}
+
+.input-bar button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(34, 197, 94, 0.4);
+}
+
+/* 管理后台 */
+.admin-view {
+  flex: 1;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-header h2 {
+  margin: 0 0 4px;
+}
+
+.admin-header p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* Admin 顶部 Tab */
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.6);
+  padding-bottom: 4px;
+}
+
+.admin-tab {
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-light);
+  opacity: 0.8;
+  transition: background 0.2s, opacity 0.2s, transform 0.1s;
+}
+
+.app-root.light .admin-tab {
+  color: var(--text-dark);
+}
+
+.admin-tab:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.admin-tab.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+  opacity: 1;
+}
+
+/* 知识库管理布局：上下两块 card */
+.admin-knowledge {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 上传区域 */
+.upload-row {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+/* 表格样式 */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.8);
+}
+
+.app-root.light .admin-table th,
+.app-root.light .admin-table td {
+  border-bottom-color: var(--border-light);
+}
+
+.admin-table th {
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* 文本按钮 */
+.link-btn {
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.link-btn.danger {
+  color: #f97373;
+}
+
+/* 状态小标签 */
+.badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.badge.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.badge.warn {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.admin-card {
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(75, 85, 99, 0.7);
+  font-size: 13px;
+}
+
+.app-root.light .admin-card {
+  background: #f9fafb;
+  border-color: var(--border-light);
+}
+
+.admin-card h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+/* 设置页 */
+.settings-view {
+  flex: 1;
+  padding: 16px 18px;
+}
+
+.settings-item {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 登录 / 注册视图 */
+.auth-view {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 16px;
+  padding: 18px 20px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(55, 65, 81, 0.8);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.7);
+}
+
+.app-root.light .auth-card {
+  background: white;
+  border-color: var(--border-light);
+}
+
+.auth-card h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.form-group label {
+  opacity: 0.9;
+}
+
+.form-group input {
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+  padding: 6px 8px;
+  background: #020617;
+  color: #f9fafb;
+  font-size: 13px;
+}
+
+.app-root.light .form-group input {
+  background: white;
+  color: #111827;
+  border-color: var(--border-light);
+}
+
+.primary-btn {
+  border-radius: 999px;
+  border: none;
+  background: var(--primary);
+  color: #020617;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(34, 197, 94, 0.4);
+}
+
+.primary-btn.full-width {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.auth-switch {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.auth-switch button {
+  border: none;
+  background: none;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+/* ===== ログイン種別タグ ===== */
+.login-type-tags {
+  display: inline-flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  margin-bottom: 12px;
+}
+
+.app-root.light .login-type-tags {
+  background: rgba(226, 232, 240, 0.7);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+.login-tag {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  color: rgba(229, 231, 235, 0.9);
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+
+.app-root.light .login-tag {
+  color: rgba(17, 24, 39, 0.85);
+}
+
+.login-tag:hover {
+  transform: translateY(-1px);
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.login-tag.active {
+  background: rgba(34, 197, 94, 0.16);
+  color: var(--primary);
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.25);
+}
+
+.auth-hint {
+  margin: 0 0 12px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* ===== ログイン種別：カード式タグ ===== */
+.login-type-cards {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.login-card {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.35);
+  color: var(--text-light);
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.app-root.light .login-card {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-dark);
+  border-color: rgba(148, 163, 184, 0.45);
+}
+
+.login-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
+  border-color: rgba(56, 189, 248, 0.6);
+}
+
+.login-card.active {
+  border-color: rgba(34, 197, 94, 0.75);
+  background: rgba(34, 197, 94, 0.14);
+  box-shadow: 0 8px 22px rgba(34, 197, 94, 0.18);
+}
+
+.login-card-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.login-card.active .login-card-icon {
+  background: rgba(34, 197, 94, 0.18);
+}
+
+.login-card-text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.auth-hint {
+  margin: 0 0 12px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* 动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式：小屏幕下侧边栏变抽屉 + 顶部显示 mobile-top-bar */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: absolute;
+    z-index: 20;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-out;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-panel {
+    min-height: 80vh;
+  }
+
+  .mobile-top-bar {
+    display: flex;
+    background: rgba(15, 23, 42, 0.9);
+  }
+
+  .top-bar {
+    display: none;
+  }
+
+  .chat-body {
+    padding: 10px 10px;
+  }
+
+  .chat-message-bubble {
+    max-width: 85%;
+  }
+}
+
+/* ===== ロール選択（カード式タグ） ===== */
+.role-card-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.role-card {
+  flex: 1;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.06);
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.role-card:hover {
+  background: rgba(255,255,255,0.10);
+}
+
+.role-card.active {
+  border-color: rgba(34,197,94,0.85);
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.20) inset;
+}
+
+.role-card-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.role-card-sub {
+  margin-top: 2px;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.status-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-width: 160px;
+}
+
+.status-title {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+
+.status-value {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.status-ok {
+  color: #3ad46f;
+}
+
+.status-ng {
+  color: #ff6b6b;
+}
+
+/* エラーメッセージ */
+.auth-error {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #fecaca;
+  white-space: pre-wrap;
+}
