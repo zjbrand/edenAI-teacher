@@ -1,7 +1,15 @@
 // frontend/src/api.ts
+// frontend/src/api.ts
 
-//const API_BASE = "http://127.0.0.1:8000"; // FastAPI 后端地址
-const API_BASE = import.meta.env.VITE_API_BASE ?? "";
+// 開発用ローカル API
+const LOCAL_API = "http://127.0.0.1:8000";
+
+// 本番用 Render の API
+const REMOTE_API = "https://edenai-teacher-3.onrender.com";
+
+// Vite のビルドモードで出し分け
+const API_BASE = import.meta.env.PROD ? REMOTE_API : LOCAL_API;
+
 
 // ====== 类型 ======
 export type Role = "user" | "assistant";
