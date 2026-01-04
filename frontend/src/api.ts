@@ -1,15 +1,6 @@
 // frontend/src/api.ts
-// frontend/src/api.ts
 
-// 開発用ローカル API
-const LOCAL_API = "http://127.0.0.1:8000";
-
-// 本番用 Render の API
-const REMOTE_API = "https://edenai-teacher-3.onrender.com";
-
-// Vite のビルドモードで出し分け
-const API_BASE = import.meta.env.PROD ? REMOTE_API : LOCAL_API;
-
+import { API_BASE } from "./lib/api";
 
 // ====== 类型 ======
 export type Role = "user" | "assistant";
@@ -94,8 +85,6 @@ export async function apiRegister(
     const text = await res.text();
     throw new Error(text || `注册失败，HTTP ${res.status}`);
   }
-
-  // 注册成功，我们不关心返回体，只要 200/201 即可
 }
 
 // 3) 问问题（带历史和可选 token）

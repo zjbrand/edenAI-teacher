@@ -1,5 +1,18 @@
 // src/lib/api.ts
-const API_BASE = "http://127.0.0.1:8000";
+// ローカル開発用
+const LOCAL_API = "http://127.0.0.1:8000";
+
+// Render 本番用バックエンド
+const REMOTE_API = "https://edenai-teacher-3.onrender.com";
+
+// 実行環境を見て BASE URL を決める
+// - onrender.com ドメインなら REMOTE_API（＝Render）
+// - それ以外（localhost など）なら LOCAL_API
+export const API_BASE =
+  typeof window !== "undefined" &&
+  window.location.hostname.endsWith("onrender.com")
+    ? REMOTE_API
+    : LOCAL_API;
 
 export async function apiRegister(email: string, password: string, fullName?: string | null) {
   const res = await fetch(`${API_BASE}/auth/register`, {
