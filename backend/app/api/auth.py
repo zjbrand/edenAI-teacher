@@ -12,6 +12,7 @@ from app.services.auth_service import (
     create_access_token,
     verify_password,
     get_password_hash,
+    PasswordTooLongError,
 )
 
 from app.api.deps import get_current_user
@@ -48,17 +49,25 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
     try:
         create_user(
             db=db,
-            email=str(payload.email),          # ✅ 确保是纯字符串
+            email=str(payload.email),
             password=payload.password,
             full_name=payload.full_name,
         )
+    except PasswordTooLongError as e:
+        # 密码太长 → 直接告诉用户
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
     except ValueError as e:
+        # 其他业务上的 ValueError
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e),
         )
 
     return {"msg": "User created"}
+
 
 
 @router.post("/login", response_model=TokenResponse)
@@ -74,17 +83,26 @@ def login(
     email = form_data.username
     password = form_data.password
 
-    user = authenticate_user(db, email=email, password=password)
+    # ✅ 在这里捕获 PasswordTooLongError
+    try:
+        user = authenticate_user(db, email=email, password=password)
+    except PasswordTooLongError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),  # 例："パスワードは72バイト以内で入力してください。"
+        )
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="邮箱或密码错误",
+            detail="メールアドレスまたはパスワードが正しくありません。",
         )
 
-    # 建议 sub 用 email（更通用），也可以用 user.id（字符串化）
+    # ✅ 保持原来 dict 形式的 create_access_token
     token = create_access_token({"sub": user.email, "email": user.email})
 
     return TokenResponse(access_token=token, token_type="bearer")
+
 
 @router.get("/me", response_model=MeResponse)
 def me(current_user: User = Depends(get_current_user)):

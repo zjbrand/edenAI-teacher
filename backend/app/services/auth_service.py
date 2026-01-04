@@ -16,13 +16,28 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 1 天
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+class PasswordTooLongError(ValueError):
+    """パスワードが bcrypt の 72 バイト制限を超えたときのエラー"""
+    pass
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    # ここで bcrypt のエラーを吸収して、自前の例外に変換
+    try:
+        return pwd_context.hash(password)
+    except ValueError as e:
+        if "password cannot be longer than 72 bytes" in str(e):
+            # ここがポイント
+            raise PasswordTooLongError("パスワードは72バイト以内で入力してください。") from e
+        raise
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        return pwd_context.verify(plain_password, hashed_password)
+    except ValueError as e:
+        if "password cannot be longer than 72 bytes" in str(e):
+            raise PasswordTooLongError("パスワードは72バイト以内で入力してください。") from e
+        raise
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
