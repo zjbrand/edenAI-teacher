@@ -3,7 +3,8 @@ uvicorn[standard]
 httpx
 python-dotenv
 SQLAlchemy
-passlib[bcrypt]
+passlib[bcrypt]==1.7.4
+bcrypt==3.2.0
 python-jose[cryptography]
 email-validator
 pydantic
