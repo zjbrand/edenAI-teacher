@@ -14,7 +14,7 @@
 | 種別 | URL |
 |------|----|
 | フロントエンド | https://edenai-teacher-2.onrender.com |
-| バックエンド API | https://edenai-teacher.onrender.com |
+| バックエンド API | https://edenai-teacher-3.onrender.com|
 
 ※ Render 上で稼働
 
