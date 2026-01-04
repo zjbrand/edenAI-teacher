@@ -1,6 +1,6 @@
 // frontend/src/components/admin/AdminView.tsx
 import React, { useEffect, useState } from "react";
-import { fetchSystemStatus, fetchUsers, setUserActive, setUserRole, type AdminUser } from "../../api/admin";
+import { fetchSystemStatus, fetchUsers, setUserActive, type AdminUser } from "../../api/admin";
 import {
   apiKnowledgeList,
   apiKnowledgeUpload,
@@ -111,18 +111,19 @@ const AdminView: React.FC<AdminViewProps> = ({ token, adminTab, setAdminTab }) =
   };
 
   // ===== users actions =====
-  const onToggleRole = async (u: AdminUser) => {
-    const next = u.role === "admin" ? "user" : "admin";
-    const ok = confirm(`権限を「${next}」に変更しますか？`);
-    if (!ok) return;
+// const onToggleRole = async (u: AdminUser) => {
+//   const next = u.role === "admin" ? "user" : "admin";
+//   const ok = confirm(`権限を「${next}」に変更しますか？`);
+//   if (!ok) return;
+//
+//   try {
+//     await setUserRole(u.id, next);
+//     await loadUsers();
+//   } catch (e: any) {
+//     setUsersErr(e.message || "権限変更に失敗しました。");
+//   }
+// };
 
-    try {
-      await setUserRole(u.id, next);
-      await loadUsers();
-    } catch (e: any) {
-      setUsersErr(e.message || "権限変更に失敗しました。");
-    }
-  };
 
   const onToggleActive = async (u: AdminUser) => {
     const next = !u.is_active;

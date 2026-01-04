@@ -176,8 +176,8 @@ const App: React.FC = () => {
     if (!isLoggedIn) {
       return (
         <AuthView
-          loginType={loginType}
-          setLoginType={setLoginType}
+          //loginType={loginType}
+          //setLoginType={setLoginType}
           authMode={authMode}
           setAuthMode={setAuthMode}
           authEmail={authEmail}
