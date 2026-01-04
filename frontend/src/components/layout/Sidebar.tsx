@@ -43,7 +43,7 @@ const Sidebar: React.FC<Props> = ({
           <img src={logo} alt="Eden" className="sidebar-logo" />
           <div className="sidebar-title">
             <div className="sidebar-title-main">Eden AI</div>
-            <div className="sidebar-title-sub">プログラミング教師</div>
+            <div className="sidebar-title-sub">プログラミング教師(TEST)</div>
           </div>
         </div>
 
