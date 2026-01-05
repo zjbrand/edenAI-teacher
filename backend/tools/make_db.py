@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect("eden_teacher.db")
+conn = sqlite3.connect("../eden_teacher.db")
 cur = conn.cursor()
 #cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
 #[('knowledge_docs',), ('users',)]

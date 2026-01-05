@@ -8,6 +8,7 @@ import {
   apiKnowledgeReload,
   type KnowledgeDocItem,
 } from "../../api/knowledge";
+import { API_BASE } from "../../lib/api";
 
 export type AdminTab = "knowledge" | "users" | "system";
 
@@ -259,7 +260,30 @@ const AdminView: React.FC<AdminViewProps> = ({ token, adminTab, setAdminTab }) =
                           className="link-btn"
                           onClick={async () => {
                             if (!confirm("このユーザーを管理者にしますか？")) return;
-                            await fetch(`/admin/users/${u.id}/make-admin`, { method: "POST" });
+
+                            const token = localStorage.getItem("eden_token");
+                            if (!token) {
+                              alert("ログインが切れました。もう一度ログインしてください。");
+                              return;
+                            }
+
+                            const res = await fetch(`${API_BASE}/admin/users/${u.id}/role`, {
+                              method: "PATCH",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                              },
+                              credentials: "include",
+                              body: JSON.stringify({ role: "admin" }),
+                            });
+
+                            if (!res.ok) {
+                              const msg = await res.text().catch(() => "");
+                              console.error("make admin failed", res.status, msg);
+                              alert("管理者への変更に失敗しました。");
+                              return;
+                            }
+
                             await loadUsers();
                           }}
                         >
