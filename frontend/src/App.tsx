@@ -279,7 +279,19 @@ const App: React.FC = () => {
           isAdmin={!!isAdmin}
         />
 
-        <main className="main-panel">{renderMainContent()}</main>
+        <main className="main-panel">
+          {/* 手机端顶部栏：768px 以下才显示（由 CSS 控制 display） */}
+          <div className="mobile-top-bar">
+            <button className="menu-btn" onClick={() => setSidebarOpen((v) => !v)}>
+              ☰
+            </button>
+            <div className="mobile-top-title">Eden AI</div>
+            <div style={{ width: 24 }} />
+          </div>
+
+          {renderMainContent()}
+        </main>
+
       </div>
     </div>
   );

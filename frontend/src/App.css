@@ -17,6 +17,7 @@ html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
+  box-shadow: inset 0 0 0 6px red !important;
 }
 
 /* 根容器：根据主题切换背景和文字色 */
@@ -870,6 +871,12 @@ html, body, #root {
     flex-direction: column;
   }
 
+  .mobile-top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
   .sidebar {
     position: absolute;
     z-index: 20;
@@ -978,3 +985,4 @@ html, body, #root {
   color: #fecaca;
   white-space: pre-wrap;
 }
+

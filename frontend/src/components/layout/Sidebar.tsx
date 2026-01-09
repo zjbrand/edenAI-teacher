@@ -34,7 +34,10 @@ const Sidebar: React.FC<Props> = ({
   return (
     <aside
       className={`sidebar ${sidebarOpen ? "open" : ""}`}
-      onClick={() => sidebarOpen && setSidebarOpen(false)}
+      onClick={() => {
+        setActiveView("chat");
+        setSidebarOpen(false);
+      }}
     >
       {/* 内側クリックで閉じないようにする */}
       <div className="sidebar-inner" onClick={(e) => e.stopPropagation()}>
