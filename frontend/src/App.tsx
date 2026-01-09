@@ -290,8 +290,19 @@ const App: React.FC = () => {
           </div>
 
           {renderMainContent()}
-        </main>
 
+          {sidebarOpen && (
+             <div
+               onClick={() => setSidebarOpen(false)}
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  background: "rgba(0,0,0,0.35)",
+                  zIndex: 20,
+               }}
+            />
+          )}
+        </main>
       </div>
     </div>
   );
